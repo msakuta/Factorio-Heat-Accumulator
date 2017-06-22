@@ -31,9 +31,48 @@ Maybe I could read the temperature value of an entity every tick and output as a
 signal, but it would be so inefficient to do from a script.
 
 
+Comparison to other energy storages
+-----------------------------------
+
+| Structure                    | Capacity  | Derivation  |
+| ---------------------------- |----------:| ----------- |
+| Accumulator                  | 0.5MJ     | Written in entity description |
+| Storage tank with 500C Steam | 2.4MJ     | 0.2kJ * (500C - 15C) * 25000 [\*] |
+| Heat Accumulator             | 4.85MJ    | 10MJ * (500C - 15C) [\**] |
+
+[\*] According to the Wiki (https://wiki.factorio.com/Liquids_system), a unit of fluid has a specific heat of 0.2kJ.
+
+[\**] Assuming "specific-heat" in entity prototypes means joules per degree.
+
 Known Issues
 ------------
 
-  * You can walk on heat accumulators. This is because the structure has type of heat pipe,
+  * You can walk on heat accumulators. This is because the structure has a type of heat pipe,
     which makes the structure walkable, ignoring collision box setting.
     I don't know if there is a way to avoid this issue.	
+
+Further Ideas
+-------------
+
+These ideas could be implemented as mods, but it would be far more efficient if they are built into core dynamics.
+
+  * Heat switches
+
+    Like a power switch for electricity, a structure that dynamically connects or disconnects two heat media can be useful,
+    but I don't know if I can write it efficiently with Lua.
+
+  * Heat pumps
+
+    The law of thermodynamics teachs that heat would never move from an object with lower temperature to higher one
+    without external work.
+    However, at the cost of certain amount of energy, heat can be moved from lower temperature to higher
+    (The Reversed Carnot cycle in an ideal world).
+    It could be useful to forcefully store heat into a buffer with limited heat capacity.
+
+    In the real world, a method called [pumped-storage hydroelectricity](https://en.wikipedia.org/wiki/Pumped-storage_hydroelectricity)
+    works in a similar way with gravitational potential energy of water for load balancing.
+
+  * Thermometers
+
+    If we could read a temperature of a given entity as circuit signal, we could build a dynamic control system like with
+    electricity and Accumulators.
